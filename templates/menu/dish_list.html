@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Bizning Taomlar</h2>
+    <div class="row">
+        {% for dish in dishes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm position-relative">
+
+                {% if cart %}
+                    {% for item in cart.items.all %}
+                        {% if item.dish.id == dish.id and item.quantity > 0 %}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="z-index: 10; font-size: 0.9rem;">
+                                {{ item.quantity }}
+                            </span>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if dish.image %}
+                    <img src="{{ dish.image.url }}" class="card-img-top" alt="{{ dish.name }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ dish.name }}</h5>
+                    <p class="card-text text-muted">{{ dish.description|truncatewords:15 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 text-primary mb-0">{{ dish.price }} so'm</span>
+
+                         <div class="d-flex align-items-center">
+                            <a href="{% url 'add_to_order' dish.id 'remove' %}" class="btn btn-sm btn-danger">-</a>
+
+                            <span class="mx-2">{{ item.quantity }}</span>
+
+                            <a href="{% url 'add_to_order' dish.id 'add' %}" class="btn btn-sm btn-success">+</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <p class="text-center w-100">Hozircha taomlar mavjud emas.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

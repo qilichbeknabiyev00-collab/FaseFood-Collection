@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow border-0">
+        <div class="card-header bg-dark text-white p-3">
+            <h4 class="mb-0"><i class="bi bi-people"></i> Foydalanuvchilarni boshqarish</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Roli</th>
+                        <th>Status</th>
+                        <th class="text-end">Amallar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td><strong>{{ u.username }}</strong></td>
+                        <td>{{ u.email }}</td>
+                        <td>
+                            <span class="badge {% if u.role == 'ADMIN' %}bg-danger{% elif u.role == 'WAITER' %}bg-warning{% else %}bg-info{% endif %}">
+                                {{ u.role }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if u.is_active %}
+                                <span class="text-success"><i class="bi bi-check-circle"></i> Faol</span>
+                            {% else %}
+                                <span class="text-muted">Nofaol</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'edit_user' u.id %}" class="btn btn-sm btn-outline-dark">
+                                <i class="bi bi-pencil"></i> Tahrirlash
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

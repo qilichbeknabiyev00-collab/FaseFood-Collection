@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h2 class="text-center mb-4">🛒 Sizning Savatchangiz</h2>
+
+            {% if order and order.items.all %}
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Taom nomi</th>
+                                <th class="text-center">Soni</th>
+                                <th class="text-center">Narxi</th>
+                                <th class="text-end">Jami</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td>
+                                    <h6 class="mb-0">{{ item.dish.name }}</h6>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-info text-dark fs-6">{{ item.quantity }} ta</span>
+                                </td>
+                                <td class="text-center">{{ item.dish.price }} so'm</td>
+                                <td class="text-end fw-bold">{{ item.get_item_total }} so'm</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="row mt-4 p-3 bg-light rounded mx-1 border border-warning shadow-sm">
+                        <div class="col-md-7">
+                            <label for="distance_input" class="form-label fw-bold">
+                                <i class="bi bi-geo-alt-fill text-danger"></i> Yetkazib berish masofasini kiriting (km):
+                            </label>
+                            <div class="input-group">
+                                <input type="number" step="0.1" id="distance_input" name="distance_km"
+                                       form="checkout-form" class="form-control form-control-lg border-warning"
+                                       placeholder="Masalan: 5.5" required min="0.1">
+                                <span class="input-group-text bg-warning fw-bold">km</span>
+                            </div>
+                            <small class="text-muted">Har 1 km uchun 3 minut yo'l vaqti hisoblanadi.</small>
+                        </div>
+                        <div class="col-md-5 text-end d-flex flex-column justify-content-center">
+                            <p class="text-muted mb-0">Taxminiy yetkazish vaqti:</p>
+                            <h3 class="text-primary mb-0">
+                                <i class="bi bi-clock-history"></i> <span id="realtime_delivery_time">0</span> minut
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 pt-3">
+                        <div class="col-md-12 text-end">
+                            <p class="text-muted mb-1">To'lanishi kerak bo'lgan jami summa:</p>
+                            <h2 class="text-success fw-bold">{{ order.get_total_price }} so'm</h2>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <form id="checkout-form" action="{% url 'checkout' %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm py-3">
+                                <i class="bi bi-check-circle-fill"></i> Buyurtmani tasdiqlash va yuborish
+                            </button>
+                        </form>
+
+                        <a href="{% url 'dish_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-plus-circle"></i> Yana taom qo'shish
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Real vaqtda hisoblash algoritmi
+    document.getElementById('distance_input').addEventListener('input', function() {
+        let distance_km = parseFloat(this.value) || 0;
+
+        // Savatdagi jami taomlar soni (Django template orqali olinadi)
+        let totalItems = 0;
+        {% for item in order.items.all %}
+            totalItems += {{ item.quantity }};
+        {% endfor %}
+
+        // Shart: Har 5 minutda 4 ta taom
+        let prepTime = Math.ceil(totalItems / 4) * 5;
+
+        // Shart: Har 1 km uchun 3 minut
+        let travelTime = distance_km * 3;
+
+        // Jami vaqtni ekranda yangilash
+        let totalTime = Math.round(prepTime + travelTime);
+        document.getElementById('realtime_delivery_time').innerText = totalTime;
+    });
+</script>
+
+<style>
+    .card { border-radius: 15px; }
+    .table th { border-top: none; }
+    .btn-success { background-color: #28a745; border: none; font-weight: bold; }
+    .btn-success:hover { background-color: #218838; }
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+</style>
+{% endblock %}

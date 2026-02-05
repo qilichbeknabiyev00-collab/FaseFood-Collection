@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 bg-dark text-white" style="border-radius: 20px;">
+                <div class="card-header border-secondary p-4">
+                    <h3 class="mb-0"><i class="bi bi-person-gear text-warning"></i> Foydalanuvchini tahrirlash: {{ edit_user.username }}</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-secondary">Username</label>
+                                {{ form.username }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-secondary">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-secondary">Ism</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-secondary">Familiya</label>
+                                {{ form.last_name }}
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label tex    t-secondary text-warning">Tizimdagi Roli</label>
+                                {{ form.role }}
+                            </div>
+                            
+                            <div class="col-md-6 mt-4">
+                                <div class="form-check form-switch">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label ms-2">Hisob faolligi (Active)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-4">
+                                <div class="form-check form-switch">
+                                    {{ form.is_staff }}
+                                    <label class="form-check-label ms-2">Admin panelga ruxsat (Staff)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label class="form-label text-warning fw-bold">
+                                <i class="bi bi-shield-lock"></i> User permissions (Maxsus ruxsatnomalar)
+                            </label>
+
+                            {{ form.user_permissions }}
+
+                            <p class="text-muted small">
+                                Hold down "Control", or "Command" on a Mac, to select more than one.
+                            </p>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="form-label text-warning fw-bold">
+                                <i class="bi bi-people"></i> Groups (Guruhlar)
+                            </label>
+
+                            {{ form.groups }}
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <div class="form-check form-switch">
+                                {{ form.is_superuser }}
+                                <label class="form-check-label text-danger fw-bold ms-2">Superuser status (Barcha huquqlar cheksiz)</label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-5">
+                            <a href="{% url 'user_management' %}" class="btn btn-outline-secondary rounded-pill px-4">Bekor qilish</a>
+                            <button type="submit" class="btn btn-warning rounded-pill px-5 fw-bold text-dark">O'zgarishlarni saqlash</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

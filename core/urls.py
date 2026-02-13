@@ -5,6 +5,9 @@ from users import views as user_views
 from django.contrib import admin
 from dish.views import dish_list
 from order import views
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,)
 
 
 urlpatterns = [
@@ -23,4 +26,7 @@ urlpatterns = [
     path('edit-profile/', user_views.edit_user, name='edit_user'),
     path('admin-panel/users/', user_views.user_management_view, name='user_management'),
     path('admin-panel/users/edit/<int:user_id>/', user_views.edit_user, name='edit_user'),
+
+path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

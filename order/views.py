@@ -25,7 +25,7 @@ def add_to_order(request, dish_id, action):
         defaults={'distance_km': 0.0}
     )
     order_item, item_created = OrderItem.objects.get_or_create(order=order, dish=dish)
-fiff
+# fiff
     if action == 'add':
         if not item_created:
             order_item.quantity += 1

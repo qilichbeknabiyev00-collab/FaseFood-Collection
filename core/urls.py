@@ -23,7 +23,7 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('register/', user_views.register_view, name='register'),
     path('profile/', views.profile_view, name='profile'),
-    path('edit-profile/', user_views.edit_user, name='edit_user'),
+    path('profile/edit-profile/', user_views.edit_user, name='edit_user'),
     path('admin-panel/users/', user_views.user_management_view, name='user_management'),
     path('admin-panel/users/edit/<int:user_id>/', user_views.edit_user, name='edit_user'),
 
